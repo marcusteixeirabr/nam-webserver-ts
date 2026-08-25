@@ -1,0 +1,116 @@
+openapi: 3.0.3
+
+info:
+  title: NAM Web Services - API de Relatórios Imobiliários
+  description: >
+    Serviços REST desenvolvidos para o trabalho de Hands on Work VII,
+    no contexto do projeto de extensão NAM (Núcleo de Apoio ao Migrante).
+    Expõe dados agregados de pagamentos de imóveis para consumo por
+    painéis gráficos (gráfico de barras, linhas e pizza).
+  version: "1.0.0"
+  contact:
+    name: HOW VII
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor local de desenvolvimento
+
+tags:
+  - name: Relatórios
+    description: Endpoints de dados agregados para os gráficos do painel
+
+paths:
+  /api/valor-por-imovel:
+    get:
+      tags:
+        - Relatórios
+      summary: Valor total pago por imóvel
+      description: >
+        Retorna, para cada imóvel, o somatório de todos os pagamentos
+        registrados na série histórica completa. Alimenta o gráfico de
+        barras (item a do escopo).
+      operationId: getValorPorImovel
+      responses:
+        "200":
+          description: Mapa de código do imóvel para o valor total pago
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: number
+                  format: double
+              example:
+                "1": 20600.00
+                "2": 9900.00
+                "3": 10800.00
+        "500":
+          $ref: "#/components/responses/ErroInterno"
+
+  /api/vendas-por-mes:
+    get:
+      tags:
+        - Relatórios
+      summary: Total de vendas por mês/ano
+      description: >
+        Retorna o valor total de vendas ocorridas em cada mês/ano
+        disponível no banco de dados, em ordem cronológica. Alimenta o
+        gráfico de dispersão/linhas (item b do escopo).
+      operationId: getVendasPorMes
+      responses:
+        "200":
+          description: Mapa de "MM/yyyy" para o valor total de vendas no período
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: number
+                  format: double
+              example:
+                "08/2023": 29800.00
+                "09/2023": 25400.00
+                "10/2023": 22150.00
+        "500":
+          $ref: "#/components/responses/ErroInterno"
+
+  /api/percentual-por-tipo:
+    get:
+      tags:
+        - Relatórios
+      summary: Percentual de vendas por tipo de imóvel
+      description: >
+        Retorna o percentual do valor total de vendas (0-100) que cada
+        tipo de imóvel representa na série histórica completa. Alimenta
+        o gráfico de pizza (item c do escopo).
+      operationId: getPercentualPorTipo
+      responses:
+        "200":
+          description: Mapa de nome do tipo de imóvel para o percentual (0-100)
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: number
+                  format: double
+              example:
+                Apartamento: 45.30
+                Casa: 32.10
+                Sala Comercial: 22.60
+        "500":
+          $ref: "#/components/responses/ErroInterno"
+
+components:
+  responses:
+    ErroInterno:
+      description: Erro ao processar a requisição (ex. falha de conexão com o banco)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+            example:
+              erro: "Erro ao buscar pagamentos no banco de dados"
