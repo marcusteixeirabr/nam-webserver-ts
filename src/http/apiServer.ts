@@ -4,12 +4,10 @@ import { totalPorImovel, totalPorMes, percentualPorTipo } from "../service/relat
 
 export const router = express.Router();
 
-
-
 router.get("/api/valor-por-imovel", async (_, res) => {
 try {
         const pagamentos = await buscarTodos();
-        res.json(totalPorImovel(pagamentos));      
+        res.json(totalPorImovel(pagamentos));
 } catch (error: unknown) {
     res.status(500).json({ error: "Erro ao buscar dados" });
 }

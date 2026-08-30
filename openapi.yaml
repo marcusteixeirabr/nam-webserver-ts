@@ -44,6 +44,8 @@ paths:
                 "1": 20600.00
                 "2": 9900.00
                 "3": 10800.00
+        "404":
+          $ref: "#/components/responses/NaoEncontrado"
         "500":
           $ref: "#/components/responses/ErroInterno"
 
@@ -71,6 +73,8 @@ paths:
                 "08/2023": 29800.00
                 "09/2023": 25400.00
                 "10/2023": 22150.00
+        "404":
+          $ref: "#/components/responses/NaoEncontrado"
         "500":
           $ref: "#/components/responses/ErroInterno"
 
@@ -98,6 +102,8 @@ paths:
                 Apartamento: 45.30
                 Casa: 32.10
                 Sala Comercial: 22.60
+        "404":
+          $ref: "#/components/responses/NaoEncontrado"
         "500":
           $ref: "#/components/responses/ErroInterno"
 
@@ -113,4 +119,15 @@ components:
               erro:
                 type: string
             example:
-              erro: "Erro ao buscar pagamentos no banco de dados"
+              erro: "Erro ao buscar pagamentos no banco de dados."
+    NaoEncontrado:
+      description: Não foram encontrados os dados solicitados.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+            example:
+              erro: "Não foram encontrados os dados solicitados."
